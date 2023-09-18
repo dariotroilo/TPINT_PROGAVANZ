@@ -19,7 +19,7 @@ public class SpringConfiguracion {
  
      @Bean
         public ViewResolver viewResolver() {
-         System.out.println("llega");
+         //System.out.println("llega");
             InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
             viewResolver.setViewClass(JstlView.class);
             viewResolver.setPrefix("/WEB-INF/vistas/");

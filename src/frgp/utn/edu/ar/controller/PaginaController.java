@@ -170,8 +170,6 @@ public class PaginaController {
 		    userubicacion = userubicacionDao.Getuser(usuario);
 		    String filial = userubicacion.getFilial();
 		    String ubicacion = userubicacion.getLocalizacion();
-		    System.out.println(filial);
-		    System.out.println(ubicacion);
 			
 			r_registroinventario.setCodigo(codigo);
 			r_registroinventario.setDescripcion(descri);

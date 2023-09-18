@@ -79,10 +79,6 @@ codigo = "";
 descri = "";
 cantidad=0;
 
-System.out.println(request.getParameter("codigo"));
-System.out.println(request.getParameter("descri"));
-System.out.println(request.getParameter("cantidad"));
-
 if ( request.getParameter("codigo") != null && request.getParameter("descri") !=null) {
 	codigo = "";
 	descri = "";
