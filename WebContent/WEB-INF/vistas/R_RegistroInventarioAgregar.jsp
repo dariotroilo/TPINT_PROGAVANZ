@@ -33,11 +33,19 @@ function confirmarEliminar() {
 }
 
 function guardarCantidad() {
-	  document.getElementById("codigoInput").value = "";
-	  //document.getElementById("cantidadInput").value = 0; // Usa "0" como cadena para el valor
-	  document.getElementById("descriInput").value = "";
-	  return true;
+
+	if ( document.getElementById("codigoInput").value == "" ) {
+		return alert("Falta el Código!");
+		  
 	}
+	if ( document.getElementById("cantidadInput").value == 0 ) {
+		 return alert("Falta la Cantidad!");
+	}
+	if ( document.getElementById("descriInput").value == "" ) {
+		return alert("Falta la Descripción!");
+	}
+
+}
 </script>
 
 
@@ -133,7 +141,7 @@ if (request.getAttribute("SB1010Negocio") != null) {
                 <input type="text" id="cantidadInput" name="cantidad" value="<%=cantidad%>">
             </td>
             <td>
-                <button type="submit" class="btn-cantidad" name="btnGuardarCantidad">Guardar</button> <!-- onclick="return guardarCantidad()"  -->
+                <button type="submit" class="btn-cantidad" name="btnGuardarCantidad" onclick="return guardarCantidad()">Guardar</button> <!-- onclick="return guardarCantidad()"  -->
             </td>
         </tr>
         <tr>

@@ -52,6 +52,8 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 		} catch (Exception e) {
 			session.getTransaction().rollback();
 			e.printStackTrace();
+			config.cerrarSession();
+			return null;
 		}
 
 		config.cerrarSession();

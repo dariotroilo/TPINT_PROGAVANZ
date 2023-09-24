@@ -178,7 +178,9 @@ public class PaginaController {
 			r_registroinventario.setUbicacion(ubicacion);
 			r_registroinventario.setUsuario(usuario);
 			r_registroinventario.setFecha(fecha);
-			registro.agregarR_RegistroInventario(r_registroinventario);
+			if (codigo != "" && descri != "" && cantidad > 0 && cantidad != null) {
+				registro.agregarR_RegistroInventario(r_registroinventario);
+			}
 			MV.addObject("usuario","");
 			MV.addObject("cantidad",0);
 			MV.addObject("descri","");
