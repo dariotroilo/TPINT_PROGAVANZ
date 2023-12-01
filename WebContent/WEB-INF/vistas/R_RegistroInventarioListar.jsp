@@ -3,6 +3,8 @@
 <%@page import="frgp.utn.edu.ar.entidad.R_RegistroInventario"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
+<%@ page import="org.apache.commons.text.StringEscapeUtils"%>
+
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -116,7 +118,7 @@ if (listaR_RegistroInventario != null) {
                     <% Integer idArticulo = articulo.getId(); %> 
                     <td><%= idArticulo %></td>
                     <td><%= articulo.getCodigo() %></td>
-                    <td><%= articulo.getDescripcion() %></td>
+                    <td><%= StringEscapeUtils.escapeHtml4(articulo.getDescripcion()) %></td>
                     <% Integer Cantidad = articulo.getCantidad(); %>
                     <td><%= Cantidad %></td>
                     <td><%= articulo.getFilial() %></td>
