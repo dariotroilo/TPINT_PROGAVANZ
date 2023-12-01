@@ -146,7 +146,7 @@ public class PaginaController {
 	            .getAuthentication();
 	    UserDetails userDetail = (UserDetails) auth.getPrincipal();
 	    String usuario = userDetail.getUsername();
-		
+		codigo=codigo.trim();
 	    if (btnBuscar != null) {
 	    	SB1010Negocio SB1010Negocio = (SB1010Negocio) appContext.getBean("SB1010Negocio");
 	    	if ( codigo.length() > 7 ) {

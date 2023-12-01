@@ -1,6 +1,8 @@
 package frgp.utn.edu.ar.dao;
 
 import java.util.List;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import org.hibernate.Query;
@@ -63,10 +65,13 @@ public class R_RegistroInventarioDao implements R_RegistroInventarioDaoInt {
 	public List<R_RegistroInventario> readAllUser(String user) {
 		Session session = config.abrirConexion();
 		session.beginTransaction();
+		LocalDate fechaActual = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		String fecha = fechaActual.format(formatter);
+		
 		List<R_RegistroInventario> registroinventario = new ArrayList<>();
 		try {
-			String hql = "FROM R_RegistroInventario a WHERE a.usuario='" + user
-					+ "' and a.delet <> '*' ORDER BY id DESC";
+			String hql = "FROM R_RegistroInventario a WHERE a.usuario='" + user	+ "' and a.fecha='" + fecha + "' and a.delet <> '*' ORDER BY id DESC";
 			Query query = session.createQuery(hql);
 			Object[] result = query.list().toArray();
 
@@ -132,7 +137,7 @@ public class R_RegistroInventarioDao implements R_RegistroInventarioDaoInt {
 			// Asigna los valores de los campos de r_registroinventario a los parámetros de
 			// la consulta
 			query.setParameter("codigo", r_registroinventario.getCodigo());
-			query.setParameter("descripcion", r_registroinventario.getDescripcion());
+			query.setParameter("descripcion", r_registroinventario.getDescripcion().substring(0,60));
 			query.setParameter("cantidad", r_registroinventario.getCantidad());
 			query.setParameter("filial", r_registroinventario.getFilial());
 			query.setParameter("ubicacion", r_registroinventario.getUbicacion());
