@@ -33,24 +33,26 @@ public class ZCB010Dao implements ZCB010DaoInt {
 	@Transactional()
 	public String readWithCod(String cod) {
 	    Session session = config.abrirConexion();
-	    session.beginTransaction();
-	    /*SB1010 producto = new SB1010();*/
-
+	    //session.beginTransaction();
+	    String codigodev = "0000000";
+	    //SB1010 producto = new SB1010();
+	    
 	    try
 	    {
-	        //String hql = "SELECT R_E_C_N_O_,BE_FILIAL,LEFT(BE_LOCALIZ,5) as BE_LOCAL, BE_LOCALIZ, BE_DESCRIC, BE_PRIOR FROM SBE010 a WHERE a.D_E_L_E_T_= '' and a.BE_FILIAL='" + filial; // +"' group by LEFT(BE_FILIAL,5) desc";
 	    	String hql = "FROM ZCB010 a WHERE a.zcb_codbar='" + cod + "' AND a.d_e_l_e_t_<> '*' order by a.zcb_quant asc";
 			Query query = session.createQuery(hql);
 			query.setMaxResults(1);
 			ZCB010 producto = (ZCB010) query.uniqueResult();
-			session.getTransaction().commit();
-			return producto.getZcb_cod();
-		} catch (Exception e) {
-			session.getTransaction().rollback();
+			if (producto != null) {
+	            codigodev = producto.getZcb_cod();
+			}
+			return codigodev;
+	    } catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Error procesando la solicitud ZCB010Dao readWithCod", e);
 		} finally {
-			config.cerrarSession();
-		}	
+			session.close();
+		}
+	    
 	}
 }

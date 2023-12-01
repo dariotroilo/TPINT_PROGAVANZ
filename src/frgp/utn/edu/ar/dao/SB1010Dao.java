@@ -16,6 +16,7 @@ import frgp.utn.edu.ar.daoInt.SB1010DaoInt;
 public class SB1010Dao implements SB1010DaoInt {
 
 	private ConfigHibernate config;
+
 	
 	public SB1010Dao()
 	{
@@ -33,34 +34,38 @@ public class SB1010Dao implements SB1010DaoInt {
 	
 	
 	@Override
-	@Transactional()
+	@Transactional
 	public SB1010 readWithCod(String cod) {
-	    Session session = config.abrirConexion();
-	    session.beginTransaction();
-	    /*SB1010 producto = new SB1010();*/
+		Session session = config.abrirConexion();
+		
+	    try {
+	        String hql = "FROM SB1010 a WHERE a.b1_cod = :cod AND a.d_e_l_e_t_ = ''";
+	        Query query = session.createQuery(hql);
+	        query.setParameter("cod", cod);
+	        SB1010 producto = (SB1010) query.uniqueResult();
+	        
+	        if (producto == null) {
+	            producto = new SB1010();
+	            producto.setB1_desc("");
+	            producto.setB1_cod("0000000");
+	            producto.setD_e_l_e_t_("");
+	            producto.setR_e_c_n_o_(0);
+	        }
 
-	    try
-	    {
-	        //String hql = "SELECT R_E_C_N_O_,BE_FILIAL,LEFT(BE_LOCALIZ,5) as BE_LOCAL, BE_LOCALIZ, BE_DESCRIC, BE_PRIOR FROM SBE010 a WHERE a.D_E_L_E_T_= '' and a.BE_FILIAL='" + filial; // +"' group by LEFT(BE_FILIAL,5) desc";
-	    	String hql = "FROM SB1010 a WHERE a.b1_cod='" + cod + "' AND a.d_e_l_e_t_= ''";
-			Query query = session.createQuery(hql);
-			SB1010 producto = (SB1010) query.uniqueResult();
-			session.getTransaction().commit();
-			return producto;
-		} catch (Exception e) {
-			session.getTransaction().rollback();
+	        return producto;
+	    } catch (Exception e) {
 			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Error procesando la solicitud SB1010DAO readWithCod", e);
 		} finally {
-			config.cerrarSession();
-		}	
+			session.close();
+		}
 	}
+
 
 	@Override
 	@Transactional()
 	public List<SB1010> readAll() {
 	    Session session = config.abrirConexion();
-	    session.beginTransaction();
 	    List<SB1010> codigos = new ArrayList<>();
 
 	    try
@@ -74,18 +79,16 @@ public class SB1010Dao implements SB1010DaoInt {
 	            	codigos.add((SB1010) obj);
 	            }
 	        }
+		    return codigos;
 
-	        session.getTransaction().commit();
 	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
+	    catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud SB1010DAO readAll", e);
+		} finally {
+			session.close();
+		}	    
 
-	    config.cerrarSession();
-	    
-	    return codigos;
 	}
 
 

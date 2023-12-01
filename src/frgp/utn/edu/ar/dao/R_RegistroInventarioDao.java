@@ -17,12 +17,11 @@ import frgp.utn.edu.ar.daoInt.R_RegistroInventarioDaoInt;
 public class R_RegistroInventarioDao implements R_RegistroInventarioDaoInt {
 
 	private ConfigHibernate config;
-	
-	public R_RegistroInventarioDao()
-	{
+
+	public R_RegistroInventarioDao() {
 		this.config = new ConfigHibernate();
 	}
-	
+
 	public ConfigHibernate getConfig() {
 		return config;
 	}
@@ -31,197 +30,189 @@ public class R_RegistroInventarioDao implements R_RegistroInventarioDaoInt {
 		this.config = config;
 	}
 
-	
-	
 	@Override
 	@Transactional()
 	public List<R_RegistroInventario> readAll() {
-	    Session session = config.abrirConexion();
-	    session.beginTransaction();
-	    List<R_RegistroInventario> registroinventario = new ArrayList<>();
+		Session session = config.abrirConexion();
+		//session.beginTransaction();
+		List<R_RegistroInventario> registroinventario = new ArrayList<>();
 
-	    try
-	    {
-	        String hql = "FROM R_RegistroInventario a WHERE a.delet <> '*' ORDER BY id DESC";
-	        Query query = session.createQuery(hql);
-	        Object[] result = query.list().toArray();
-	        
-	        for (Object obj : result) {
-	            if (obj instanceof R_RegistroInventario) {
-	            	registroinventario.add((R_RegistroInventario) obj);
-	            }
-	        }
+		try {
+			String hql = "FROM R_RegistroInventario a WHERE a.delet <> '*' ORDER BY id DESC";
+			Query query = session.createQuery(hql);
+			Object[] result = query.list().toArray();
 
-	        session.getTransaction().commit();
-	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
+			for (Object obj : result) {
+				if (obj instanceof R_RegistroInventario) {
+					registroinventario.add((R_RegistroInventario) obj);
+				}
+			}
 
-	    config.cerrarSession();
-	    
-	    return registroinventario;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO readAll", e);
+		} finally {
+			session.close();
+		}
+
+		return registroinventario;
 	}
-	
-	
+
 	@Override
 	@Transactional()
 	public List<R_RegistroInventario> readAllUser(String user) {
-	    Session session = config.abrirConexion();
-	    session.beginTransaction();
-	    List<R_RegistroInventario> registroinventario = new ArrayList<>();
-	    try
-	    {
-	        String hql = "FROM R_RegistroInventario a WHERE a.usuario='" + user + "' and a.delet <> '*' ORDER BY id DESC";
-	        Query query = session.createQuery(hql);
-	        Object[] result = query.list().toArray();
-	        
-	        for (Object obj : result) {
-	            if (obj instanceof R_RegistroInventario) {
-	            	registroinventario.add((R_RegistroInventario) obj);
-	            }
-	        }
+		Session session = config.abrirConexion();
+		session.beginTransaction();
+		List<R_RegistroInventario> registroinventario = new ArrayList<>();
+		try {
+			String hql = "FROM R_RegistroInventario a WHERE a.usuario='" + user
+					+ "' and a.delet <> '*' ORDER BY id DESC";
+			Query query = session.createQuery(hql);
+			Object[] result = query.list().toArray();
 
-	        session.getTransaction().commit();
-	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
-	    finally
-	    {
-			config.cerrarSession();
-	    }
+			for (Object obj : result) {
+				if (obj instanceof R_RegistroInventario) {
+					registroinventario.add((R_RegistroInventario) obj);
+				}
+			}
 
-	    return registroinventario;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO readAllUser", e);
+		} finally {
+			session.close();
+		}
+
+		return registroinventario;
 	}
-
 
 	@Override
 	@Transactional()
 	public List<R_RegistroInventario> readAllWithFilter(String filtro) {
-	    Session session = config.abrirConexion();
-	    session.beginTransaction();
-	    List<R_RegistroInventario> registroinventario = new ArrayList<>();
+		Session session = config.abrirConexion();
+		session.beginTransaction();
+		List<R_RegistroInventario> registroinventario = new ArrayList<>();
 
-	    try
-	    {
-	        String hql = "FROM R_RegistroInventario a WHERE a.nombre like '%" + filtro + "%' or a.descripcion like '%" + filtro + "%'";
-	        Query query = session.createQuery(hql);
-	        Object[] result = query.list().toArray();
-	        
-	        for (Object obj : result) {
-	            if (obj instanceof R_RegistroInventario) {
-	            	registroinventario.add((R_RegistroInventario) obj);
-	            }
-	        }
+		try {
+			String hql = "FROM R_RegistroInventario a WHERE a.nombre like '%" + filtro + "%' or a.descripcion like '%"
+					+ filtro + "%'";
+			Query query = session.createQuery(hql);
+			Object[] result = query.list().toArray();
 
-	        session.getTransaction().commit();
-	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
-	    finally
-	    {
-			config.cerrarSession();
-	    }
+			for (Object obj : result) {
+				if (obj instanceof R_RegistroInventario) {
+					registroinventario.add((R_RegistroInventario) obj);
+				}
+			}
 
-	    return registroinventario;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO readAllWithFilter", e);
+		} finally {
+			session.close();
+		}
+
+		return registroinventario;
 	}
 
 	@Transactional()
 	public boolean agregarR_RegistroInventarioDao(R_RegistroInventario r_registroinventario) {
-		
-		Session session = config.abrirConexion();
 
-		//session.beginTransaction();
-		//session.save(r_registroinventario);
-		//session.getTransaction().commit();
-		
-		    String sql = "INSERT INTO R_RegistroInventario (codigo, descripcion, cantidad, filial, ubicacion, usuario, fecha, delet) " +
-	                "VALUES (:codigo, :descripcion, :cantidad, :filial, :ubicacion, :usuario, :fecha, :delet)";
-	
-		   SQLQuery query = session.createSQLQuery(sql);
-		   
-		   // Asigna los valores de los campos de r_registroinventario a los parámetros de la consulta
-		   query.setParameter("codigo", r_registroinventario.getCodigo());
-		   query.setParameter("descripcion", r_registroinventario.getDescripcion());
-		   query.setParameter("cantidad", r_registroinventario.getCantidad());
-		   query.setParameter("filial", r_registroinventario.getFilial());
-		   query.setParameter("ubicacion", r_registroinventario.getUbicacion());
-		   query.setParameter("usuario", r_registroinventario.getUsuario());
-		   query.setParameter("fecha", r_registroinventario.getFecha());
-		   query.setParameter("delet", "");
-		
-		   // Ejecuta la consulta SQL
-		    query.executeUpdate();
-		
-		
-			config.cerrarSession();
-		
-		return true;
-	}
-	
-	@Transactional()
-	public R_RegistroInventario Get(Integer idR_RegistroInventario)
-	{
 		Session session = config.abrirConexion();
+		session.beginTransaction();
 		
 		try {
-		    session.beginTransaction();
-		    String hql = "FROM R_RegistroInventario a WHERE a.id = :idArticulo and delet=''";
-		    Query query = session.createQuery(hql);
-		    query.setParameter("idArticulo", idR_RegistroInventario);
-		    R_RegistroInventario r_registroinventario = (R_RegistroInventario) query.uniqueResult();
-		    session.getTransaction().commit();
-		    return r_registroinventario;
+
+			String sql = "INSERT INTO R_RegistroInventario (codigo, descripcion, cantidad, filial, ubicacion, usuario, fecha, delet) "
+					+ "VALUES (:codigo, :descripcion, :cantidad, :filial, :ubicacion, :usuario, :fecha, :delet)";
+
+			SQLQuery query = session.createSQLQuery(sql);
+
+			// Asigna los valores de los campos de r_registroinventario a los parámetros de
+			// la consulta
+			query.setParameter("codigo", r_registroinventario.getCodigo());
+			query.setParameter("descripcion", r_registroinventario.getDescripcion());
+			query.setParameter("cantidad", r_registroinventario.getCantidad());
+			query.setParameter("filial", r_registroinventario.getFilial());
+			query.setParameter("ubicacion", r_registroinventario.getUbicacion());
+			query.setParameter("usuario", r_registroinventario.getUsuario());
+			query.setParameter("fecha", r_registroinventario.getFecha());
+			query.setParameter("delet", "");
+
+			// Ejecuta la consulta SQL
+			query.executeUpdate();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO agregarR_RegistroInventarioDao", e);
+		} finally {
+			session.close();
 		}
-		catch (Exception e)
-		{
-		    session.getTransaction().rollback();
-		    e.printStackTrace();
-		    return null;
-		}
-		finally
-		{
-			config.cerrarSession();
+
+		return true;
+	}
+
+	@Transactional()
+	public R_RegistroInventario Get(Integer idR_RegistroInventario) {
+		Session session = config.abrirConexion();
+
+		try {
+			session.beginTransaction();
+			String hql = "FROM R_RegistroInventario a WHERE a.id = :idArticulo and delet=''";
+			Query query = session.createQuery(hql);
+			query.setParameter("idArticulo", idR_RegistroInventario);
+			R_RegistroInventario r_registroinventario = (R_RegistroInventario) query.uniqueResult();
+			session.getTransaction().commit();
+			return r_registroinventario;
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO Get", e);
+		} finally {
+			session.close();
 		}
 	}
-	
+
 	@Override
 	@Transactional()
-	public void Update(R_RegistroInventario articulo)
-	{
-		Session session= config.abrirConexion();
+	public void Update(R_RegistroInventario articulo) {
+		Session session = config.abrirConexion();
 		
-        session.beginTransaction();
-        session.update(articulo);
-        session.getTransaction().commit();        
-        
-        config.cerrarSession();
+	try {
+		session.beginTransaction();
+		session.update(articulo);
+		session.getTransaction().commit();
+	} catch (Exception e) {
+		e.printStackTrace();
+		throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO Update", e);
+	} finally {
+		session.close();
 	}
+}
 
 
 	@Override
 	public boolean Delete(Integer id) {
-	    Session session = config.abrirConexion();
-	    session.beginTransaction();
-	    R_RegistroInventario articulo = (R_RegistroInventario) session.get(R_RegistroInventario.class , id);
-	    
-	    if (articulo != null) {
-	        articulo.setDelet("*");
-	        session.update(articulo);
-	    }
-	    
-	    session.getTransaction().commit();
-	    config.cerrarSession();
-	    
-	    return true;
+		Session session = config.abrirConexion();
+		session.beginTransaction();
+		R_RegistroInventario articulo = (R_RegistroInventario) session.get(R_RegistroInventario.class, id);
+		try {
+			session.beginTransaction();
+			if (articulo != null) {
+				articulo.setDelet("*");
+				session.update(articulo);
+				session.getTransaction().commit();
+			}
+			
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud R_RegistroInventarioDAO Delete", e);
+		} finally {
+			session.close();
+		}
+
+		return true;
 	}
 
 	@Override
@@ -229,6 +220,5 @@ public class R_RegistroInventarioDao implements R_RegistroInventarioDaoInt {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
 
 }

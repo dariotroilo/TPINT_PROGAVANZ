@@ -36,7 +36,7 @@ public class SBE010Dao implements SBE010DaoInt {
 	@Transactional()
 	public List<SBE010> readWithFilial(String filial) {
 	    Session session = config.abrirConexion();
-	    session.beginTransaction();
+	    //session.beginTransaction();
 	    List<SBE010> ubicaciones = new ArrayList<>();
 
 	    try
@@ -53,24 +53,21 @@ public class SBE010Dao implements SBE010DaoInt {
 	            }
 	        }
 
-	        session.getTransaction().commit();
+	        return ubicaciones;
 	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
-
-	    config.cerrarSession();
-	    
-	    return ubicaciones;
+	    catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud SBE010DAO readWithFilial", e);
+		} finally {
+			session.close();
+		}
 	}
 
 	@Override
 	@Transactional()
 	public List<SBE010> readAll() {
 	    Session session = config.abrirConexion();
-	    session.beginTransaction();
+	    //session.beginTransaction();
 	    List<SBE010> ubicaciones = new ArrayList<>();
 
 	    try
@@ -84,24 +81,20 @@ public class SBE010Dao implements SBE010DaoInt {
 	                ubicaciones.add((SBE010) obj);
 	            }
 	        }
-
-	        session.getTransaction().commit();
+		    return ubicaciones;
 	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
-
-	    config.cerrarSession();
-	    
-	    return ubicaciones;
+	    catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud SBE010DAO readAll", e);
+		} finally {
+			session.close();
+		}
 	}
+
 	@Override
 	@Transactional()
 	public List<SBE010> readFirst(String filial, String inicio) {
 	    Session session = config.abrirConexion();
-	    session.beginTransaction();
 	    List<SBE010> ubicaciones = new ArrayList<>();
 
 	    try
@@ -115,23 +108,14 @@ public class SBE010Dao implements SBE010DaoInt {
 	            	ubicaciones.add((SBE010) obj);
 	            }
 	        }
-
-	        session.getTransaction().commit();
+		    return ubicaciones;
 	    }
-	    catch (Exception e)
-	    {
-	        session.getTransaction().rollback();
-	        e.printStackTrace();
-	    }
-	    finally
-	    {
-			config.cerrarSession();
-	    }
-
-	    return ubicaciones;
+	    catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud SBE010DAO readFirst", e);
+		} finally {
+			session.close();
+		}
 	}
 
-	
-	
-	
 }

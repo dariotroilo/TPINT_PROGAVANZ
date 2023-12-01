@@ -17,8 +17,7 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 
 	private ConfigHibernate config;
 
-	public UserubicacionDao() 
-	{
+	public UserubicacionDao() {
 		this.config = new ConfigHibernate();
 	}
 
@@ -34,7 +33,6 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 	@Transactional()
 	public List<Userubicacion> readAll() {
 		Session session = config.abrirConexion();
-		session.beginTransaction();
 		List<Userubicacion> userubicaciones = new ArrayList<>();
 
 		try {
@@ -47,18 +45,14 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 					userubicaciones.add((Userubicacion) obj);
 				}
 			}
+			return userubicaciones;
 
-			session.getTransaction().commit();
 		} catch (Exception e) {
-			session.getTransaction().rollback();
 			e.printStackTrace();
-			config.cerrarSession();
-			return null;
+			throw new RuntimeException("Error procesando la solicitud UserubicacionDao readAll", e);
+		} finally {
+			session.close();
 		}
-
-		config.cerrarSession();
-
-		return userubicaciones;
 	}
 
 	@Override
@@ -72,17 +66,16 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 			Query query = session.createQuery(hql);
 			query.setParameter("id", Id);
 			Userubicacion userubicacion = (Userubicacion) query.uniqueResult();
-			session.getTransaction().commit();
+
 			return userubicacion;
 		} catch (Exception e) {
-			session.getTransaction().rollback();
 			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Error procesando la solicitud UserubicacionDao Get", e);
 		} finally {
-			config.cerrarSession();
+			session.close();
 		}
 	}
-	
+
 	@Override
 	@Transactional()
 	public Userubicacion Getuser(String usuario) {
@@ -94,14 +87,13 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 			Query query = session.createQuery(hql);
 			query.setParameter("usuario", usuario);
 			Userubicacion userubicacion = (Userubicacion) query.uniqueResult();
-			session.getTransaction().commit();
+
 			return userubicacion;
 		} catch (Exception e) {
-			session.getTransaction().rollback();
 			e.printStackTrace();
-			return null;
+			throw new RuntimeException("Error procesando la solicitud UserubicacionDao Getuser", e);
 		} finally {
-			config.cerrarSession();
+			session.close();
 		}
 	}
 
@@ -109,12 +101,16 @@ public class UserubicacionDao implements UserubicacionDaoInt {
 	public void Update(Userubicacion userubicacion) {
 		Session session = config.abrirConexion();
 
-		session.beginTransaction();
-		session.update(userubicacion);
-		session.getTransaction().commit();
-
-		config.cerrarSession();
-
+		try {
+			session.beginTransaction();
+			session.update(userubicacion);
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error procesando la solicitud UserubicacionDao Update", e);
+		} finally {
+			session.close();
+		}
 	}
 
 }
